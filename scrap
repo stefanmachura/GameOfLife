@@ -1,0 +1,10 @@
+    def check_fate(self):
+        print("Q" * 20)
+        for y in range(self.size_y):
+            for x in range(self.size_x):
+                try:
+                    print(self.check_neighbours(x, y), end="")
+                    
+                except IndexError as e:
+                    print(f"ERROR: {x},{y}, {e}")
+            print("")
