@@ -1,3 +1,4 @@
+import pygame
 import random
 from cell import Cell
 
@@ -19,10 +20,28 @@ class Board:
         self.max_x = size_x - 1
         self.max_y = size_y - 1
         self.board = [[Cell(x, y) for x in range(size_x)] for y in range(size_y)]
-        # self.board = []
-        # for x in range(size_x):
-        #     for y in range(size_y):
-        #         self.board.append(Cell(x, y))
+
+    def draw(self, surface):
+        block_size = (10, 10)
+        border = 3
+        start_x = 50
+        start_y = 50
+        WHITE = (255, 255, 255)
+        BLACK = (0, 0, 0)
+
+        current_x = start_x
+        current_y = start_y
+
+        for y in range(self.size_y):
+            for x in range(self.size_x):
+                if self.get(x, y):
+                    pygame.draw.rect(surface, BLACK, (current_x, current_y, block_size[0], block_size[1]))
+                else:
+                    pygame.draw.rect(surface, WHITE, (current_x, current_y, block_size[0], block_size[1]))
+                current_x += (block_size[0] + border)
+            current_x = start_x
+            current_y += (block_size[1] + border)
+
 
     def print(self, deb=False):
         for row in self.board:
@@ -48,10 +67,10 @@ class Board:
     def set_life(self, x, y, life):
         self.board[y][x].live = life
 
-    def random_populate(self):
+    def random_populate(self, prcnt=50):
         for row in self.board:
             for cell in row:
-                if chance(35):
+                if chance(prcnt):
                     cell.live = True
 
     def populate(self, x, y):
@@ -103,24 +122,24 @@ class Board:
                 if n in [0, 1]:
                     if self.get(x, y):
                         self.set_fate(x, y, DIE)
-                        print(f"cell at {x},{y} will die!")
-                if n > 4:
+                        # print(f"cell at {x},{y} will die!")
+                if n >= 4:
                     self.set_fate(x, y, DIE)
-                    print(f"cell at {x},{y} will die due to overpopulation!")
+                    # print(f"cell at {x},{y} will die due to overpopulation!")
                 if n == 3:
                     self.set_fate(x, y, GROW)
-                    print(f"cell at {x},{y} will grow!")
+                    # print(f"cell at {x},{y} will grow!")
 
     def apply_fate(self):
         for y in range(self.size_y):
             for x in range(self.size_x):
                 fate = self.get_fate(x, y)
                 if fate == DIE:
-                    print(f"cell at {x},{y} died!")
+                    # print(f"cell at {x},{y} died!")
                     self.set_life(x, y, False)
                     self.set_fate(x, y, None)
                 if fate == GROW:
-                    print(f"cell at {x},{y} was born!")
+                    # print(f"cell at {x},{y} was born!")
                     self.set_life(x, y, True)
                     self.set_fate(x, y, None)
 

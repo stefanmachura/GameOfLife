@@ -1,27 +1,29 @@
-
 import pygame
+
+from board import Board
+
 pygame.init()
 
-# Set up the drawing window
-screen = pygame.display.set_mode([500, 500])
+screen = pygame.display.set_mode([1800, 1300])
+pygame.display.set_caption("Game of Life")
 
-# Run until the user asks to quit
+screen.fill((155, 155, 155))
+clock = pygame.time.Clock()
+
+board = Board(130, 90)
+board.random_populate(50)
+
 running = True
+generation = 0
 while running:
-
-    # Did the user click the window close button?
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # Fill the background with white
-    screen.fill((255, 255, 255))
-
-    # Draw a solid blue circle in the center
-    pygame.draw.circle(screen, (0, 0, 255), (250, 250), 75)
-
-    # Flip the display
+    board.draw(screen)
+    board.generation()
     pygame.display.flip()
-
-# Done! Time to quit.
+    pygame.display.set_caption(f"Game of Life | generation {generation}")
+    # clock.tick(1)
+    generation +=1 
 pygame.quit()
